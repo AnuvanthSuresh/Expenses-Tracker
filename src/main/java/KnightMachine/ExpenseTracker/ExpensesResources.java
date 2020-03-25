@@ -1,13 +1,14 @@
 package KnightMachine.ExpenseTracker;
 
+
 import java.util.ArrayList;
-import java.util.Date;
+
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
@@ -17,19 +18,20 @@ import KnightMachine.Model.ExpensesModel;
 @Path("Expenses")
 public class ExpensesResources {
 
-	@PUT
-	@Path("Add/{expense}/{date}/{price}")
+	@POST
+	@Path("AddExpense")
 	@Consumes({MediaType.APPLICATION_JSON,MediaType.APPLICATION_XML})
-	public boolean addExpenseModel(@PathParam("expense") String expenses, @PathParam("date") Date date,
-			@PathParam("price") Float price) {
+	@Produces({MediaType.APPLICATION_JSON,MediaType.APPLICATION_XML})
+	public ExpensesModel addExpenseModel(ExpensesModel expensesM) {
 		DBresources db = new DBresources();
-		Boolean status = db.addExpense(expenses, date, price);
+		Boolean status = db.addExpense(expensesM.getExpense(),expensesM.getDate(),expensesM.getExpense_amnt());
 
+		
 		if(status) {
-			return false;
+			return expensesM;
 		}
 		else {
-			return true;
+			return expensesM;
 		}
 		
 	}
@@ -43,6 +45,29 @@ public class ExpensesResources {
 		ArrayList<ExpensesModel> exp = new ArrayList<ExpensesModel>();
 		
 		exp = res.getAllExpense();
+		
+		return exp;
+		
+	}
+	
+	@GET
+	@Path("Expense/date")
+	@Produces({MediaType.APPLICATION_JSON,MediaType.APPLICATION_XML})
+	@Consumes({MediaType.APPLICATION_JSON,MediaType.APPLICATION_XML})
+	public ArrayList<ExpensesModel> ExpenseResource(){
+		
+		DBresources res = new DBresources();
+		ArrayList<ExpensesModel> exp = new ArrayList<ExpensesModel>();
+		ExpensesModel expenseM= new ExpensesModel();
+		exp = res.getExpense(expenseM.getDate());
+	
+		for(ExpensesModel em : exp) {
+			
+			System.out.print(em.getDate());
+			System.out.print(em.getExpense());
+			System.out.print(em.getExpense_amnt());
+			System.out.println();
+		}
 		
 		return exp;
 		
